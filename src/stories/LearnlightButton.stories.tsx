@@ -2,13 +2,41 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import React from 'react';
 import { LearnlightButton } from './LearnlightButton';
+import { Icon, iconNames } from './Icons';
 import { buttonTokens } from './tokens';
 
+const ICON_OPTIONS = ['none', ...iconNames] as const;
+
+// Extra args not on the component — used to pick icons from the registry
+type ExtraArgs = { leftIconName?: string; rightIconName?: string };
+
+const ICON_SIZE: Record<'l' | 'm' | 's', number> = { l: 16, m: 14, s: 12 };
+
+function resolveIcon(name: string | undefined, size: number) {
+  return name && name !== 'none' ? <Icon name={name} size={size} /> : undefined;
+}
+
 const meta = {
-  title: 'Learnlight/Button',
+  title: 'Components/Button',
   component: LearnlightButton,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
+  // Applied to every story — translates leftIconName/rightIconName selects into React nodes
+  render: ({ leftIconName, rightIconName, size = 'm', ...args }: any) => {
+    const sz = ICON_SIZE[size as 'l' | 'm' | 's'];
+    const iconLeft  = resolveIcon(leftIconName, sz);
+    const iconRight = resolveIcon(rightIconName, sz);
+    return (
+      <LearnlightButton
+        {...args}
+        size={size}
+        leftIcon={!!iconLeft}
+        rightIcon={!!iconRight}
+        selectIconLeft={iconLeft}
+        selectIconRight={iconRight}
+      />
+    );
+  },
   argTypes: {
     variant: {
       control: 'select',
@@ -26,16 +54,38 @@ const meta = {
       description: 'Layout mode',
     },
     isDisabled: { control: 'boolean' },
-    leftIcon: { control: 'boolean' },
-    rightIcon: { control: 'boolean' },
+    leftIcon:  { table: { disable: true } },
+    rightIcon: { table: { disable: true } },
+    selectIconLeft:  { table: { disable: true } },
+    selectIconRight: { table: { disable: true } },
     text: { control: 'text' },
     onClick: { action: 'clicked' },
+    // Icon picker — 'none' = off, any name = on
+    leftIconName: {
+      control: 'select',
+      options: ICON_OPTIONS,
+      description: 'Left icon — select an icon to enable, "none" to hide',
+      table: { category: 'Icons' },
+    },
+    rightIconName: {
+      control: 'select',
+      options: ICON_OPTIONS,
+      description: 'Right icon — select an icon to enable, "none" to hide',
+      table: { category: 'Icons' },
+    },
   },
-  args: { onClick: fn() },
-} satisfies Meta<typeof LearnlightButton>;
+  args: { onClick: fn(), leftIconName: 'none', rightIconName: 'none' },
+} satisfies Meta<typeof LearnlightButton & ExtraArgs>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+// ─── Playground ───────────────────────────────────────────────────────────────
+
+/** Interactive playground — use controls to change variant, size, and icons */
+export const Default: Story = {
+  args: { variant: 'primary', size: 'm', text: 'Button' },
+};
 
 // ─── Variant stories ──────────────────────────────────────────────────────────
 
@@ -131,25 +181,25 @@ export const DisabledText: Story = {
 /** Left icon + label */
 export const WithLeftIcon: Story = {
   name: 'Icons / Left Icon',
-  args: { leftIcon: true, text: 'With Icon' },
+  args: { leftIconName: 'search', text: 'With Icon' },
 };
 
 /** Right icon + label */
 export const WithRightIcon: Story = {
   name: 'Icons / Right Icon',
-  args: { rightIcon: true, text: 'With Icon' },
+  args: { rightIconName: 'arrow-right', text: 'With Icon' },
 };
 
 /** Both icons flanking the label */
 export const WithBothIcons: Story = {
   name: 'Icons / Both Icons',
-  args: { leftIcon: true, rightIcon: true, text: 'With Icons' },
+  args: { leftIconName: 'search', rightIconName: 'arrow-right', text: 'With Icons' },
 };
 
 /** Icon-only — no label */
 export const IconOnly: Story = {
   name: 'Icons / Icon Only',
-  args: { content: 'icon_only' },
+  args: { leftIconName: 'search', content: 'icon_only' },
 };
 
 // ─── Edge case stories ────────────────────────────────────────────────────────

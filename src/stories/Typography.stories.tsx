@@ -240,7 +240,7 @@ function SpecimenPage() {
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta = {
-  title: 'Learnlight/Typography',
+  title: 'Foundations/Typography',
   parameters: { layout: 'padded' },
   tags: ['autodocs'],
 } satisfies Meta;

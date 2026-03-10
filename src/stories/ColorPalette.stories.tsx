@@ -405,7 +405,7 @@ function BaseColorsPage() {
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta = {
-  title: 'Learnlight/Color Palette',
+  title: 'Foundations/Color Palette',
   parameters: { layout: 'padded' },
   tags: ['autodocs'],
 } satisfies Meta;

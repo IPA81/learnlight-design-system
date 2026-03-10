@@ -102,6 +102,125 @@ export const scale = {
   },
 } as const;
 
+// ─── Shadow tokens ────────────────────────────────────────────────────────────
+
+/**
+ * Shadow base colors — the two palette references used to build all shadows.
+ *
+ * shadowInk  (#091E42) — dedicated elevation ink; not in the base scale (distinct
+ *                        from neutral-900 #092f42). Sourced directly from Figma.
+ * shadowBlue (#0276b1) — reuses color['focus'] from the semantic palette.
+ */
+export const shadowBaseColors = {
+  ink:  '#091E42',           // neutral shadow ink
+  blue: color['focus'],      // = #0276b1 — focus / brand blue
+} as const;
+
+// Pre-mixed rgba values derived from the base colors above
+const inkAt10  = 'rgba(9, 30, 66, 0.10)';   // shadowBaseColors.ink  @ 10%
+const inkAt32  = 'rgba(9, 30, 66, 0.32)';   // shadowBaseColors.ink  @ 32%
+const blueAt25 = 'rgba(2, 118, 177, 0.25)'; // shadowBaseColors.blue @ 25%
+
+/** Primitive shadows — the raw values used by semantic tokens */
+export const shadowScale = {
+  shadow1: `0 2px 8px 0 ${inkAt10}`,
+  shadow2: `0 0px 40px 0 ${inkAt32}`,
+} as const;
+
+/** Semantic shadow tokens — maps use-case names to primitives */
+export const shadow = {
+  'card':        `2px 2px 8px 0 ${inkAt10}`,   // shadow1 — cards
+  'page-header': `0 2px 4px 0 ${inkAt10}`,     // shadow1 — page headers
+  'modal':       `0 0px 40px 0 ${inkAt32}`,    // shadow2 — modals / overlays
+  'focus':       `0 1px 12px 0 ${blueAt25}`,   // color['focus'] @ 25% — focus state
+} as const;
+
+export type ShadowToken = keyof typeof shadow;
+
+// ─── Spacing tokens ───────────────────────────────────────────────────────────
+
+export const spacingScale = {
+  'none':   0,
+  '3xs':    2,
+  '2xs':    4,
+  'xs':     8,
+  'sm':     12,
+  'md':     16,
+  'lg':     24,
+  'xl':     32,
+  '2xl':    48,
+  '3xl':    64,
+} as const;
+
+/** Full names matching Figma token names */
+export const spacingNames: Record<keyof typeof spacingScale, string> = {
+  'none': 'spacing-none',
+  '3xs':  'spacing-extra-extra-extra-small',
+  '2xs':  'spacing-extra-extra-small',
+  'xs':   'spacing-extra-small',
+  'sm':   'spacing-small',
+  'md':   'spacing-medium',
+  'lg':   'spacing-large',
+  'xl':   'spacing-extra-large',
+  '2xl':  'spacing-extra-extra-large',
+  '3xl':  'spacing-extra-extra-extra-large',
+};
+
+export type SpacingToken = keyof typeof spacingScale;
+
+// ─── Radius tokens ────────────────────────────────────────────────────────────
+
+/** Primitive radius scale */
+export const radiusScale = {
+  'extra-small': 4,
+  'small':       6,
+  'medium':      8,
+  'large':       16,
+  'max':         999,
+} as const;
+
+/** Semantic radius tokens — maps use-case names to primitives */
+export const radius = {
+  'tags':        radiusScale['extra-small'],  // 4px
+  'interactive': radiusScale['small'],        // 6px  — buttons, inputs
+  'cards':       radiusScale['medium'],       // 8px  — conversations, filters, sidepanel
+  'card-large':  radiusScale['large'],        // 16px — homepage cards
+  'circle':      radiusScale['max'],          // 999px — pill / avatar
+} as const;
+
+export type RadiusToken = keyof typeof radius;
+
+// ─── Border tokens ────────────────────────────────────────────────────────────
+
+/**
+ * Primitive borders — the building blocks used by semantic tokens.
+ * All colors reference the semantic color palette above.
+ *
+ * border1 — 1px solid, color varies by context (default: border-primary)
+ * border2 — border-bottom only, 1px solid border-primary
+ * border3 — 2px solid border-brand (highlight / active outline)
+ */
+export const borderScale = {
+  border1: { width: '1px', style: 'solid', color: color['border-primary'] },
+  border2: { width: '1px', style: 'solid', color: color['border-primary'], side: 'bottom' },
+  border3: { width: '2px', style: 'solid', color: color['border-brand'] },
+} as const;
+
+/** Semantic border tokens — maps use-case names to primitives */
+export const border = {
+  // border1 variants — 1px solid, context-appropriate color
+  'button':           `1px solid ${color['border-primary']}`,
+  'tag':              `1px solid ${color['border-primary']}`,
+  'card':             `1px solid ${color['border-secondary']}`,
+  'focus':            `1px solid ${color['focus']}`,
+  // border2 — bottom only (applied as borderBottom)
+  'header':           `1px solid ${color['border-primary']}`,
+  // border3 — 2px brand outline
+  'highlight-card':   `2px solid ${color['border-brand']}`,
+} as const;
+
+export type BorderToken = keyof typeof border;
+
 // ─── Button-specific token map ────────────────────────────────────────────────
 // Maps each button variant to the semantic tokens it consumes.
 

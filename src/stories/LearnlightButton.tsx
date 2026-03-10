@@ -87,9 +87,9 @@ const COLORS = Object.fromEntries(
 };
 
 const SIZES = {
-  l: { height: 40, paddingX: 16, fontSize: 14, iconSize: 16, gap: 6 },
-  m: { height: 32, paddingX: 12, fontSize: 13, iconSize: 14, gap: 5 },
-  s: { height: 24, paddingX: 8,  fontSize: 12, iconSize: 12, gap: 4 },
+  l: { height: 40, paddingX: 8, fontSize: 14, iconSize: 16, gap: 6 },
+  m: { height: 32, paddingX: 8, fontSize: 13, iconSize: 14, gap: 5 },
+  s: { height: 24, paddingX: 8, fontSize: 12, iconSize: 12, gap: 4 },
 };
 
 const DEFAULT_ICON = (size: number) => (
